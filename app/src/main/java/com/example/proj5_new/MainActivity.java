@@ -11,23 +11,29 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnCreateContextMenuListener {
     AlertDialog.Builder adb;
     LinearLayout mydialog;
     Button btn;
     EditText et1, et2, et3;
     TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8;
     ListView lv;
-    Intent intent = getIntent();
     String kind;
     double a1;
     double delta;
+    Boolean bool1 = false;
+    Boolean bool2 = false;
+    Boolean bool3 = false;
+    Boolean bool4 = false;
     double[] arr = new double[20];
     String[] arr_string = new String[20];
     double eser=0;
@@ -45,26 +51,56 @@ public class MainActivity extends AppCompatActivity {
         tv7 = findViewById(R.id.tv7);
         tv8 = findViewById(R.id.tv8);
         lv = (ListView) findViewById(R.id.lv);
+        lv.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         btn = findViewById(R.id.btn);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(bool4) {
+                    int n = i + 1;
+                    tv7.setText(String.valueOf((n)));
+                    if(kind.equals("Invoicing")){
+                        eser = (n * (2*a1 + delta*(n-1)))/2;
+                    }
+                    else{
+                        eser = a1 * (Math.pow(delta, n)-1)/(delta-1);
+                    }
+                    tv8.setText(String.valueOf((eser)));
+                }
+            }
+        });
+    }
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.tafrit, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        String str = item.getTitle().toString();
+        if(str.equals("Main Activity")){
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
+        else if(str.equals("Credits Activity")){
+            Intent intent = new Intent(this, Credits_Activity.class);
+            startActivity(intent);
+        }
+        else if(str.equals("Dialog")){
+            go(item.getActionView());
+        }
+        return super.onOptionsItemSelected(item);
     }
     DialogInterface.OnClickListener myclick = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialogInterface, int i) {
             if(i==DialogInterface.BUTTON_POSITIVE){
-               kind = et1.getText().toString();
-               a1 = Double.parseDouble(et2.getText().toString());
-               delta = Double.parseDouble(et3.getText().toString());
-               dialogInterface.dismiss();
+
+               inputs_check();
             }
             if(i==DialogInterface.BUTTON_NEUTRAL){
                 dialogInterface.cancel();
             }
-            if(i==DialogInterface.BUTTON_NEGATIVE){
-                et1.setText("");
-                et2.setText("");
-                et3.setText("");
-                dialogInterface.dismiss();
-            }
+
         }
     };
     public void go(View view){
@@ -72,40 +108,83 @@ public class MainActivity extends AppCompatActivity {
         et1 = mydialog.findViewById(R.id.et1);
         et2 = mydialog.findViewById(R.id.et2);
         et3 = mydialog.findViewById(R.id.et3);
+        Button deleteInputBtn = mydialog.findViewById(R.id.deleteInput);
+        deleteInputBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    et1.setText("");
+                    et2.setText("");
+                    et3.setText("");
+                    Toast.makeText(MainActivity.this,"Button negative",Toast.LENGTH_SHORT).show();
+            }
+        });
         adb = new AlertDialog.Builder(this);
         adb.setView(mydialog);
         adb.setTitle("Inputs");
         adb.setMessage("Enter the following data: ");
         adb.setPositiveButton("Inputs",myclick);
         adb.setNeutralButton("Cancel",myclick);
-        adb.setNegativeButton("Delete",myclick);
         adb.show();
     }
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.tafrit, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-    public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        String str = item.getTitle().toString();
-        if(str.equals("Main Activity")){
-            go_main();
+    public void inputs_check(){
+        if((et1.getText().toString().equals("")==false) && (et2.getText().toString().equals("")==false) && (et3.getText().toString().equals("")==false)){
+            kind = et1.getText().toString();
+            a1 = Double.parseDouble(et2.getText().toString());
+            delta = Double.parseDouble(et3.getText().toString());
+            if(kind.equals("Invoicing")==true || kind.equals("Engineering")==true){
+                bool1 = true;
+            }
+            else {
+                Toast.makeText(this, "you need to choose between Invoicing or Engineering", Toast.LENGTH_SHORT).show();
+                kind = et1.getText().toString();
+                bool4 = false;
+            }
+            if(a1>-1000000.0 && a1<1000000.0){
+                bool2=true;
+            }
+            else{
+                Toast.makeText(this, "you need to choose a number between -1000000 to 1000000", Toast.LENGTH_SHORT).show();
+                a1 = Double.parseDouble(et2.getText().toString());
+                bool4 = false;
+            }
+            if(delta>-1000000.0 && delta<1000000.0){
+                bool3=true;
+            }
+            else{
+                Toast.makeText(this, "you need to choose a number between -1000000 to 1000000", Toast.LENGTH_SHORT).show();
+                delta = Double.parseDouble(et3.getText().toString());
+                bool4 = false;
+            }
+            if(bool1 && bool2 && bool3){
+                lv_full();
+            }
         }
-        else if(str.equals("Credits Activity")){
-            go_credits();
+        else{
+            Toast.makeText(this, "you did not enter everything requested", Toast.LENGTH_SHORT).show();
         }
-        return super.onOptionsItemSelected(item);
     }
-    /**
-     * The operation accepts as a variable parameter a menu bar type selected by the user
-     * The action calls the sub-function and changes the color of the screen according to the selected option
-     */
-    public void go_main(){
-        intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    public void lv_full(){
+        arr[0]=a1;
+        arr_string[0]= String.valueOf(a1);
+        if(kind.equals("Invoicing")){
+            for(int i=1;i<20;i++){
+                arr[i]=arr[i-1]+delta;
+                arr_string[i]= String.valueOf(arr[i]);
+            }
+        }
+        else{
+            for(int i=1;i<20;i++){
+                arr[i]=arr[i-1]*delta;
+                arr_string[i]=String.valueOf(arr[i]);
+            }
+        }
+        tv5.setText(arr_string[0]);
+        tv6.setText(String.valueOf((delta)));
+        bool4=true;
+        ArrayAdapter<String> adp = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arr_string);
+        lv.setAdapter(adp);
+        bool1=false;
+        bool2=false;
+        bool3=false;
     }
-    public void go_credits(){
-        intent = new Intent(this, Credits_Activity.class);
-        startActivity(intent);
-    }
-
 }
