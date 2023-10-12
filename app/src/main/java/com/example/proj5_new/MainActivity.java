@@ -19,6 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+/** @author Created by karin on 3/10/2023.
+ * @version 0.0
+ * @since 3/10/2023
+ *On this Activity, when we click on the button, a dialog box will open in which we will receive data, and then the members of the series will appear in a list view, and clicking on each member will show its position in the series and the amount from the first member up to it. And there is also a general menu that allows us to switch between screens and the dialog box.
+ */
 
 public class MainActivity extends AppCompatActivity implements View.OnCreateContextMenuListener {
     AlertDialog.Builder adb;
@@ -30,13 +35,13 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
     String kind;
     double a1;
     double delta;
-    Boolean bool1 = false;
-    Boolean bool2 = false;
-    Boolean bool3 = false;
-    Boolean bool4 = false;
+    Boolean bool1 = false; // boolean flag for the type of the series
+    Boolean bool2 = false; // boolean flag for the first term of the series
+    Boolean bool3 = false; // boolean flag for the difference/multiplier of the series
+    Boolean bool4 = false; // boolean flag uses to check if the user clicked on item in the list view
     double[] arr = new double[20];
     String[] arr_string = new String[20];
-    double eser=0;
+    double eser=0; // sum
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +76,28 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
             }
         });
     }
+    /**
+     * onCreateOptionsMenu method
+     * <p> Creating the options menu
+     * </p>
+     *
+     * @param menu the Menu object to pass to the inflater
+     * @return true
+     * adds another option to the menu which is go to the dialog box
+     */
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.tafrit, menu);
+        menu.add(0,0,500, "Dialog");
         return true;
     }
+    /**
+     * onOptionsItemSelected method
+     * <p> Reacting the options menu
+     * </p>
+     *
+     * @param item the MenuItem object that triggered by the listener
+     * @return super.onOptionsItemSelected(item)
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         String str = item.getTitle().toString();
         if(str.equals("Main Activity")){
@@ -92,17 +115,29 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
     }
     DialogInterface.OnClickListener myclick = new DialogInterface.OnClickListener() {
         @Override
+        /**
+         * onClick
+         * <p> Reacting the buttons in the dialog
+         * </p>
+         *
+         * @param dialogInterface, i the index of the pressed button
+         */
         public void onClick(DialogInterface dialogInterface, int i) {
             if(i==DialogInterface.BUTTON_POSITIVE){
-
                inputs_check();
             }
-            if(i==DialogInterface.BUTTON_NEUTRAL){
+            else if(i==DialogInterface.BUTTON_NEUTRAL){
                 dialogInterface.cancel();
             }
-
         }
     };
+    /**
+     * go method
+     * <p> Demonstrate custom alert dialog with 3 buttons(witch one of them I created)
+     * </p>
+     *
+     * @param view the view that triggered the method
+     */
     public void go(View view){
         mydialog = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog, null);
         et1 = mydialog.findViewById(R.id.et1);
@@ -115,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
                     et1.setText("");
                     et2.setText("");
                     et3.setText("");
-                    Toast.makeText(MainActivity.this,"Button negative",Toast.LENGTH_SHORT).show();
             }
         });
         adb = new AlertDialog.Builder(this);
@@ -126,6 +160,10 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
         adb.setNeutralButton("Cancel",myclick);
         adb.show();
     }
+    /**
+     * inputs_check method
+     * <p> the function checks if all the inputs are normal
+     */
     public void inputs_check(){
         if((et1.getText().toString().equals("")==false) && (et2.getText().toString().equals("")==false) && (et3.getText().toString().equals("")==false)){
             kind = et1.getText().toString();
@@ -163,6 +201,10 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
             Toast.makeText(this, "you did not enter everything requested", Toast.LENGTH_SHORT).show();
         }
     }
+    /**
+     * lv_full
+     * <p> the function fulls the array with all the terms
+     */
     public void lv_full(){
         arr[0]=a1;
         arr_string[0]= String.valueOf(a1);

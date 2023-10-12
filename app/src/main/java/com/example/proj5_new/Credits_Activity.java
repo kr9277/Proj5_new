@@ -10,6 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+/** @author Created by karin on 3/10/2023.
+ * @version 0.0
+ * @since 18/9/2023
+ *In this Activity there is an image View, 2 text View and a general menu that allows us to switch between screens.
+ */
 
 public class Credits_Activity extends AppCompatActivity implements View.OnCreateContextMenuListener {
     TextView tv1, tv2;
@@ -24,10 +29,26 @@ public class Credits_Activity extends AppCompatActivity implements View.OnCreate
         iv = findViewById(R.id.iv);
         iv.setImageResource(R.drawable.img);
     }
+    /**
+     * onCreateOptionsMenu method
+     * <p> Creating the options menu
+     * </p>
+     *
+     * @param menu the Menu object to pass to the inflater
+     * @return true
+     */
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.tafrit, menu);
         return true;
     }
+    /**
+     * onOptionsItemSelected method
+     * <p> Reacting the options menu
+     * </p>
+     *
+     * @param item the MenuItem object that triggered by the listener
+     * @return super.onOptionsItemSelected(item)
+     */
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         String str = item.getTitle().toString();
         if(str.equals("Main Activity")){
