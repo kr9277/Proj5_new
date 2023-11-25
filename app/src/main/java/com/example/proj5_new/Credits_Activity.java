@@ -11,9 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 /** @author Created by karin on 3/10/2023.
- * @version 0.0
- * @since 18/9/2023
- *In this Activity there is an image View, 2 text View and a general menu that allows us to switch between screens.
+ * @version 1.1
+ * @since 22/11/2023
+ *In this Activity there is  2 text View and a general menu that allows us to switch between screens.
  */
 
 public class Credits_Activity extends AppCompatActivity implements View.OnCreateContextMenuListener {

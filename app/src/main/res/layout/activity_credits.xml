@@ -19,6 +19,7 @@
         android:layout_height="0px"
         android:layout_weight="1.5"
         android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
         android:text="Credits Activity:"
         android:textColor="#E91E63"
         android:textSize="24sp" />
@@ -33,6 +34,7 @@
         android:layout_width="367dp"
         android:layout_height="0px"
         android:layout_weight="1.5"
+        android:gravity="center"
         android:text="This Project was created by karin"
         android:textSize="20sp" />
 

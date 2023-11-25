@@ -17,11 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 /** @author Created by karin on 3/10/2023.
- * @version 0.0
- * @since 3/10/2023
+ * @version 1.1
+ * @since 22/11/2023
  *On this Activity, when we click on the button, a dialog box will open in which we will receive data, and then the members of the series will appear in a list view, and clicking on each member will show its position in the series and the amount from the first member up to it. And there is also a general menu that allows us to switch between screens and the dialog box.
  */
 
@@ -29,15 +30,13 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
     AlertDialog.Builder adb;
     LinearLayout mydialog;
     Button btn;
-    EditText et1, et2, et3;
-    TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8;
+    EditText et2, et3;
+    TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7, tv8, tv1_, tv2_;
+    Switch sw;
     ListView lv;
     String kind;
     double a1;
     double delta;
-    Boolean bool1 = false; // boolean flag for the type of the series
-    Boolean bool2 = false; // boolean flag for the first term of the series
-    Boolean bool3 = false; // boolean flag for the difference/multiplier of the series
     Boolean bool4 = false; // boolean flag uses to check if the user clicked on item in the list view
     double[] arr = new double[20];
     String[] arr_string = new String[20];
@@ -140,14 +139,15 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
      */
     public void go(View view){
         mydialog = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog, null);
-        et1 = mydialog.findViewById(R.id.et1);
         et2 = mydialog.findViewById(R.id.et2);
         et3 = mydialog.findViewById(R.id.et3);
+        tv1_ = mydialog.findViewById(R.id.tv1_);
+        tv2_ = mydialog.findViewById(R.id.tv2_);
+        sw = mydialog.findViewById(R.id.sw);
         Button deleteInputBtn = mydialog.findViewById(R.id.deleteInput);
         deleteInputBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    et1.setText("");
                     et2.setText("");
                     et3.setText("");
             }
@@ -165,42 +165,42 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
      * <p> the function checks if all the inputs are normal
      */
     public void inputs_check(){
-        if((et1.getText().toString().equals("")==false) && (et2.getText().toString().equals("")==false) && (et3.getText().toString().equals("")==false)){
-            kind = et1.getText().toString();
+        if((et2.getText().toString().equals("")==false) && (et3.getText().toString().equals("")==false)){
+            if(sw.isChecked()==false){
+                kind = "Invoicing";
+            }
+            else{
+                kind = "Engineering";
+            }
             a1 = Double.parseDouble(et2.getText().toString());
             delta = Double.parseDouble(et3.getText().toString());
-            if(kind.equals("Invoicing")==true || kind.equals("Engineering")==true){
-                bool1 = true;
-            }
-            else {
-                Toast.makeText(this, "you need to choose between Invoicing or Engineering", Toast.LENGTH_SHORT).show();
-                kind = et1.getText().toString();
-                bool4 = false;
-            }
-            if(a1>-1000000.0 && a1<1000000.0){
-                bool2=true;
-            }
-            else{
-                Toast.makeText(this, "you need to choose a number between -1000000 to 1000000", Toast.LENGTH_SHORT).show();
-                a1 = Double.parseDouble(et2.getText().toString());
-                bool4 = false;
-            }
-            if(delta>-1000000.0 && delta<1000000.0){
-                bool3=true;
-            }
-            else{
-                Toast.makeText(this, "you need to choose a number between -1000000 to 1000000", Toast.LENGTH_SHORT).show();
-                delta = Double.parseDouble(et3.getText().toString());
-                bool4 = false;
-            }
-            if(bool1 && bool2 && bool3){
-                lv_full();
-            }
+            lv_full();
         }
         else{
             Toast.makeText(this, "you did not enter everything requested", Toast.LENGTH_SHORT).show();
+            bool4=false;
         }
     }
+   /* public static boolean isDoubleNum(String str){
+        if(str == null || str.isEmpty()){
+            return false;
+        }
+        boolean hasDecimalPoint = false;
+        boolean hasDigits = false;
+        if(str.charAt(0)=='-' || str.charAt(0)=='+'){
+            for(int i=1;i<str.length();i++){
+                char currentChar = str.charAt(i);
+
+            }
+        }
+        else{
+            for(int i=0;i<str.length();i++){
+                char currentChar = str.charAt(i);
+
+            }
+        }
+    }*/
+
     /**
      * lv_full
      * <p> the function fulls the array with all the terms
@@ -225,8 +225,5 @@ public class MainActivity extends AppCompatActivity implements View.OnCreateCont
         bool4=true;
         ArrayAdapter<String> adp = new ArrayAdapter<>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, arr_string);
         lv.setAdapter(adp);
-        bool1=false;
-        bool2=false;
-        bool3=false;
     }
 }

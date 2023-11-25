@@ -35,6 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="X1=" />
 
         <Space
@@ -47,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="d=" />
 
         <Space
@@ -59,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="n=" />
 
         <Space
@@ -71,6 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="0px"
             android:layout_weight="1"
+            android:gravity="center|center_horizontal"
             android:text="Sn=" />
 
         <Space
